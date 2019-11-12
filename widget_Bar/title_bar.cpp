@@ -8,9 +8,6 @@ CCPushButton::CCPushButton(QWidget *parent) :
     radius(0),
     color(100)
 {
-    // WA_TranslucentBackground is not necessary.
-    //setAttribute(Qt::WA_TranslucentBackground);
-
     setMouseTracking(true);
 
     // setMask controls the rect of button very well !
@@ -23,18 +20,16 @@ CCPushButton::CCPushButton(QWidget *parent) :
     timerN2 = new QTimer(this);
     connect(timerN2, &QTimer::timeout, this, [=](){
         if(cnt > 8){
-            radius = 0;
+            if(radius > 0) radius = 0;
             color--;
             update();
             if(color == 80) {
-                timerN2->stop(); color = 100;
+                timerN2->stop();
+                color = 100;
             }
         }
         else cnt++;
     });
-
-    //! &QTimer::start() vs &QTimer::start(int msec)
-    //connect(this, &CCPushButton::pressed, timer, static_cast<void(QTimer::*)()>(&QTimer::start));
 }
 
 
