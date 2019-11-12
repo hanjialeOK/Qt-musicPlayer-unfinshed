@@ -447,7 +447,7 @@ void MyTableView::dropEvent(QDropEvent *event)
         }
 //![part 2]
 
-//![part 3] update playingRow Icon. so wired the code is!😂
+//![part 3] update playingRow Icon. so wired the code is!
         if(theDragRow == thePlayingRow){
             //oldPlayingRow = thePlayingRow;
             if(theInsertRow > theDragRow)
@@ -619,16 +619,17 @@ bool MyTableView::eventFilter(QObject *obj, QEvent *event)
 ViewItemDelegate::ViewItemDelegate(QObject *parent)
     : QStyledItemDelegate(parent),
       font("Microsoft YaHei", 9, QFont::Normal),
-      m_Height(22),
+      m_Height(26),
       m_pButton(new QPushButton())
 {
-    m_pButton->setStyleSheet("QPushButton{background-color:transparent; color:rgba(20, 20, 20, 230); border:0px solid rgb(0 ,0 ,0);}"
-                             "QPushButton{border-bottom:2px solid transparent;}"
+    m_pButton->setStyleSheet("QPushButton{background-color:transparent; color:rgba(20, 20, 20, 240); border:0px solid rgb(0 ,0 ,0);}"
+                             //"QPushButton{border-bottom:2px solid transparent;}"
+                             "QPushButton{border-radius:5px;}"
                              "QPushButton{font-family:Microsoft YaHei; font-size:15px; font-weight:Normal; text-align:left center;}"
-                             //"QPushButton:hover{color:rgba(180, 0, 0, 255); border-bottom:2px solid rgba(180, 0, 0, 255);}"
-                             "QPushButton:hover{color:rgba(0, 0, 0, 255); border-bottom:2px solid rgba(0, 0, 0, 255);}"
-                             "QPushButton:pressed{color:rgba(20, 20, 20, 255);}"
-                             //"QPushButton:pressed{color:rgba(180, 0, 0, 255);}"
+                             "QPushButton:pressed{color:rgba(20, 20, 20, 240);}"
+                             "QPushButton:hover{color:rgba(0, 0, 0, 255); /*border-bottom:2px solid rgba(0, 0, 0, 255);*/}"
+                             "QPushButton:hover{background-color:rgba(180, 180, 255, 240);}"
+                             //"QPushButton:pressed{color:rgba(20, 20, 20, 240);}"
                              );
 }
 
@@ -639,8 +640,6 @@ void ViewItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
     QRect rect = option.rect;
 
-    //QColor NormalColor = index.row() % 2 ? QColor(247, 247, 250) : QColor(253, 253, 253);
-    //QColor HoverColor = QColor(235, 236, 237);
     QColor SelectColor = QColor(240, 240, 240);
     QColor BorderColor = QColor(180, 0, 0);
 
@@ -782,14 +781,14 @@ void ViewItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         QString text;
         if(textWidth >= rect.width() - 10){
             m_Width = rect.width() - 10;
-            text = QFontMetrics(font).elidedText(author, Qt::ElideRight, rect.width() - 10);
+            text = QFontMetrics(font).elidedText(author, Qt::ElideRight, m_Width);
         }else{
             m_Width = textWidth;
             text = author;
         }
 
         int X = 3;
-        int Y = (rect.height() - m_Height) / 2 + 1; //2 is for border
+        int Y = (rect.height() - m_Height) / 2; //2 is for border
         QRect buttonRect = QRect(rect.topLeft() + QPoint(X, Y), QSize(m_Width, m_Height));
 
         QStyleOptionButton button;
@@ -810,7 +809,7 @@ void ViewItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
             button.state |= QStyle::State_Sunken;
         }
 
-        if(/*option.state & QStyle::State_MouseOver && */buttonRect.contains(view->curPos())){  //wheel
+        if(buttonRect.contains(view->curPos())){  //wheel
             QApplication::setOverrideCursor(Qt::PointingHandCursor);
             button.state |= QStyle::State_MouseOver;
         }
@@ -1304,7 +1303,7 @@ void LocalMusic::initUi()
     localMusicView->horizontalHeader()->setSectionsClickable(false);  //表头不可点击
     localMusicView->horizontalHeader()->setStyleSheet(
                 "QHeaderView{border-top:1px solid rgb(200, 200, 200); border-bottom:1px solid rgb(200, 200, 200); border-left:0px; border-right:0px;}"
-                "QHeaderView{color:rgba(100, 100, 100, 230); background-color:rgb(253, 253, 253); text-align:left center;}"
+                "QHeaderView{color:rgba(50, 50, 50, 230); background-color:rgb(253, 253, 253); text-align:left center;}"
                 );
     localMusicView->setFont(QFont("Microsoft YaHei", 9, QFont::Normal));
     localMusicView->setColumnWidth(0, 70);
@@ -1317,12 +1316,12 @@ void LocalMusic::initUi()
                 //QHeaderView的样式表也可以写在这里,前提是setObjectName("hHeader")
                 //"QHeaderView#hHeader{border-top:1px solid rgb(200, 200, 200); border-bottom:1px solid rgb(200, 200, 200);}"
                 //"QHeaderView#hHeader{color:rgba(100, 100, 100, 230); background-color:rgb(253, 253, 253); text-align:left center;}"
-                "QTableView{background-color:rgb(253, 253, 253); color:rgba(20, 20, 20, 230);}"
+                "QTableView{background-color:rgb(253, 253, 253); color:rgba(20, 20, 20, 240);}"
                 //"QTableView{alternate-background-color:rgb(245, 245, 247); color:rgba(50, 50, 50, 230);};"
                 //"QTableView{selection-background-color:rgb(210, 210, 210); selection-color:rgba(180, 0, 0, 255);}"
                 "QTableView::item:hover{background-color:rgb(235, 236, 237); /*color:rgba(10, 10, 10, 255);*/}"
-                "QTableView::item:selected{background-color:transparent; /*color:rgba(180, 0, 0, 255);*/ color:rgba(20, 20, 20, 255);}"
-                "QTableView{alternate-background-color:rgb(247, 247, 250); color:rgba(20, 20, 20, 230);};"
+                "QTableView::item:selected{background-color:transparent; color:rgba(20, 20, 20, 255);}"
+                "QTableView{alternate-background-color:rgb(247, 247, 250); color:rgba(20, 20, 20, 240);};"
                 );
     //StyledItemDelegate *delegate = new StyledItemDelegate();
     localMusicView->setItemDelegate(new ViewItemDelegate());
